@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 import Image from "next/image";
 
 import junayedImage from "@/assets/junayed.jpg";
@@ -59,23 +64,45 @@ const socialLinks = [
 ];
 
 const skills = [
-  { name: "HTML", url: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
-  { name: "CSS", url: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
+  {
+    name: "HTML",
+    url: "https://developer.mozilla.org/en-US/docs/Web/HTML",
+  },
+  {
+    name: "CSS",
+    url: "https://developer.mozilla.org/en-US/docs/Web/CSS",
+  },
   {
     name: "JavaScript",
     url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
   },
-  { name: "TypeScript", url: "https://www.typescriptlang.org/docs/" },
-  { name: "React", url: "https://react.dev/" },
-  { name: "Next.js", url: "https://nextjs.org/docs" },
-  { name: "Tailwind CSS", url: "https://tailwindcss.com/docs" },
-  { name: "Git", url: "https://git-scm.com/doc" },
+  {
+    name: "TypeScript",
+    url: "https://www.typescriptlang.org/docs/",
+  },
+  {
+    name: "React",
+    url: "https://react.dev/",
+  },
+  {
+    name: "Next.js",
+    url: "https://nextjs.org/docs",
+  },
+  {
+    name: "Tailwind CSS",
+    url: "https://tailwindcss.com/docs",
+  },
+  {
+    name: "Git",
+    url: "https://git-scm.com/doc",
+  },
 ];
 
 const projects = [
   {
     title: "JH DevStack",
-    description: "Personal developer portfolio and web development showcase.",
+    description:
+      "Personal developer portfolio and web development showcase.",
     tech: ["React", "JavaScript", "CSS"],
     url: "https://jhdevstack.netlify.app/",
   },
@@ -113,10 +140,9 @@ const projects = [
       "Explore country information, flags, and visited countries using API data.",
     tech: ["React", "TypeScript", "API"],
     url: "https://heyhelloworld.netlify.app/",
-  }
+  },
 ];
 
-// Fixed (non-random) stagger values so server and client markup always match.
 const buildingSpecs = [
   { left: "2%", width: 40, height: 120, windows: [12, 30, 55, 78] },
   { left: "9%", width: 26, height: 80, windows: [10, 40, 65] },
@@ -136,47 +162,91 @@ const bolts = [
 ];
 
 const cars = [
-  { lane: 1, dir: "right", duration: 9, delay: 0, emoji: "🚗", color: "#00eaff" },
-  { lane: 2, dir: "left", duration: 12, delay: 2, emoji: "🚙", color: "#ff2bd6" },
-  { lane: 1, dir: "right", duration: 14, delay: 6, emoji: "🚕", color: "#00eaff" },
+  {
+    lane: 1,
+    dir: "right",
+    duration: 9,
+    delay: 0,
+    emoji: "🚗",
+    color: "#00eaff",
+  },
+  {
+    lane: 2,
+    dir: "left",
+    duration: 12,
+    delay: 2,
+    emoji: "🚙",
+    color: "#ff2bd6",
+  },
+  {
+    lane: 1,
+    dir: "right",
+    duration: 14,
+    delay: 6,
+    emoji: "🚕",
+    color: "#00eaff",
+  },
 ];
 
-export default function ContactPage() {
-  const cardRef = useRef(null);
-  const trailRefs = useRef([]);
-  const [ripples, setRipples] = useState([]);
+type Ripple = {
+  id: number;
+  x: number;
+  y: number;
+};
 
-  // Cursor light-trail: a chain of glowing dots that each ease toward the
-  // one in front of them, giving a snake-like glow trail behind the pointer.
+export default function ContactPage() {
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const trailRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [ripples, setRipples] = useState<Ripple[]>([]);
+
+  // Cursor light trail
   useEffect(() => {
-    const dots = trailRefs.current.filter(Boolean);
+    const dots = trailRefs.current.filter(
+      (dot): dot is HTMLDivElement => dot !== null
+    );
+
     if (dots.length === 0) return;
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+
     if (reduceMotion) return;
 
-    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const positions = dots.map(() => ({ x: mouse.x, y: mouse.y }));
+    let mouse = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+    };
 
-    const handleMove = (e) => {
+    const positions = dots.map(() => ({
+      x: mouse.x,
+      y: mouse.y,
+    }));
+
+    const handleMove = (e: globalThis.MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
     };
+
     window.addEventListener("mousemove", handleMove);
 
-    let raf;
+    let raf: number;
+
     const animate = () => {
       let target = mouse;
+
       positions.forEach((pos, i) => {
         pos.x += (target.x - pos.x) * 0.35;
         pos.y += (target.y - pos.y) * 0.35;
+
         dots[i].style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+
         target = pos;
       });
+
       raf = requestAnimationFrame(animate);
     };
+
     animate();
 
     return () => {
@@ -185,30 +255,60 @@ export default function ContactPage() {
     };
   }, []);
 
-  // Subtle 3D tilt of the glass card, following the cursor.
-  const handleCardTilt = (e) => {
+  // 3D card tilt
+  const handleCardTilt = (e: MouseEvent<HTMLElement>) => {
     if (!cardRef.current) return;
+
     const rect = cardRef.current.getBoundingClientRect();
+
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-    cardRef.current.style.setProperty("--rx", `${py * -2}deg`);
-    cardRef.current.style.setProperty("--ry", `${px * 2}deg`);
-    cardRef.current.style.setProperty("--spot-x", `${e.clientX - rect.left}px`);
-    cardRef.current.style.setProperty("--spot-y", `${e.clientY - rect.top}px`);
+
+    cardRef.current.style.setProperty(
+      "--rx",
+      `${py * -2}deg`
+    );
+
+    cardRef.current.style.setProperty(
+      "--ry",
+      `${px * 2}deg`
+    );
+
+    cardRef.current.style.setProperty(
+      "--spot-x",
+      `${e.clientX - rect.left}px`
+    );
+
+    cardRef.current.style.setProperty(
+      "--spot-y",
+      `${e.clientY - rect.top}px`
+    );
   };
 
   const resetTilt = () => {
     if (!cardRef.current) return;
-    cardRef.current.style.setProperty("--rx", `0deg`);
-    cardRef.current.style.setProperty("--ry", `0deg`);
+
+    cardRef.current.style.setProperty("--rx", "0deg");
+    cardRef.current.style.setProperty("--ry", "0deg");
   };
 
-  // Click ripple: a small "explore" reward on click, anywhere on the page.
-  const handleClick = (e) => {
+  // Click ripple
+  const handleClick = (e: MouseEvent<HTMLElement>) => {
     const id = Date.now() + Math.random();
-    setRipples((prev) => [...prev, { id, x: e.clientX, y: e.clientY }]);
+
+    setRipples((prev) => [
+      ...prev,
+      {
+        id,
+        x: e.clientX,
+        y: e.clientY,
+      },
+    ]);
+
     setTimeout(() => {
-      setRipples((prev) => prev.filter((r) => r.id !== id));
+      setRipples((prev) =>
+        prev.filter((ripple) => ripple.id !== id)
+      );
     }, 900);
   };
 
@@ -225,6 +325,7 @@ export default function ContactPage() {
           93.2% { opacity: 0.4; }
           94% { opacity: 0; }
         }
+
         @keyframes lightningFlash2 {
           0%, 96%, 100% { opacity: 0; }
           97% { opacity: 0.4; }
@@ -232,6 +333,7 @@ export default function ContactPage() {
           98% { opacity: 0.25; }
           98.4% { opacity: 0; }
         }
+
         @keyframes flicker {
           0%, 100% { opacity: 1; }
           46% { opacity: 1; }
@@ -241,10 +343,17 @@ export default function ContactPage() {
           74% { opacity: 0.3; }
           76% { opacity: 1; }
         }
+
         @keyframes gridMove {
-          from { background-position: 0 0, 0 0; }
-          to { background-position: 0 64px, 0 0; }
+          from {
+            background-position: 0 0, 0 0;
+          }
+
+          to {
+            background-position: 0 64px, 0 0;
+          }
         }
+
         @keyframes boltFlicker {
           0%, 100% { opacity: 0; }
           2% { opacity: 1; }
@@ -252,56 +361,134 @@ export default function ContactPage() {
           6% { opacity: 0.8; }
           9% { opacity: 0; }
         }
+
         @keyframes carRight {
-          from { transform: translateX(-10vw); }
-          to { transform: translateX(110vw); }
+          from {
+            transform: translateX(-10vw);
+          }
+
+          to {
+            transform: translateX(110vw);
+          }
         }
+
         @keyframes carLeft {
-          from { transform: translateX(110vw) scaleX(-1); }
-          to { transform: translateX(-10vw) scaleX(-1); }
+          from {
+            transform: translateX(110vw) scaleX(-1);
+          }
+
+          to {
+            transform: translateX(-10vw) scaleX(-1);
+          }
         }
+
         @keyframes rippleExpand {
-          from { transform: translate(-50%, -50%) scale(0); opacity: 0.7; }
-          to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+          from {
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0.7;
+          }
+
+          to {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+          }
         }
+
         @keyframes scanSweep {
-          0% { top: -10%; }
-          100% { top: 110%; }
+          0% {
+            top: -10%;
+          }
+
+          100% {
+            top: 110%;
+          }
         }
+
         .grid-floor {
           background-image:
-            linear-gradient(rgba(255, 43, 214, 0.35) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 234, 255, 0.25) 1px, transparent 1px);
+            linear-gradient(
+              rgba(255, 43, 214, 0.35) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              90deg,
+              rgba(0, 234, 255, 0.25) 1px,
+              transparent 1px
+            );
+
           background-size: 64px 64px;
           animation: gridMove 2.4s linear infinite;
         }
-        .flicker { animation: flicker 5s ease-in-out infinite; }
-        .car-right { animation-name: carRight; animation-timing-function: linear; animation-iteration-count: infinite; }
-        .car-left { animation-name: carLeft; animation-timing-function: linear; animation-iteration-count: infinite; }
-        .bolt { animation: boltFlicker 7s ease-in-out infinite; }
-        .lightning-a { animation: lightningFlash 11s linear infinite; }
-        .lightning-b { animation: lightningFlash2 11s linear infinite; }
-        .hud-scan { animation: scanSweep 2.6s linear infinite; }
+
+        .flicker {
+          animation: flicker 5s ease-in-out infinite;
+        }
+
+        .car-right {
+          animation-name: carRight;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+        }
+
+        .car-left {
+          animation-name: carLeft;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+        }
+
+        .bolt {
+          animation: boltFlicker 7s ease-in-out infinite;
+        }
+
+        .lightning-a {
+          animation: lightningFlash 11s linear infinite;
+        }
+
+        .lightning-b {
+          animation: lightningFlash2 11s linear infinite;
+        }
+
+        .hud-scan {
+          animation: scanSweep 2.6s linear infinite;
+        }
+
         .glass-card {
-          transform: perspective(1400px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+          transform:
+            perspective(1400px)
+            rotateX(var(--rx, 0deg))
+            rotateY(var(--ry, 0deg));
+
           transition: transform 150ms ease-out;
         }
+
         .glass-card::before {
           content: "";
           position: absolute;
           inset: 0;
           pointer-events: none;
+
           background: radial-gradient(
             460px circle at var(--spot-x, 50%) var(--spot-y, 0%),
             rgba(0, 234, 255, 0.10),
             transparent 45%
           );
         }
+
         @media (prefers-reduced-motion: reduce) {
-          .flicker, .car-right, .car-left, .bolt, .lightning-a, .lightning-b, .grid-floor, .hud-scan {
+          .flicker,
+          .car-right,
+          .car-left,
+          .bolt,
+          .lightning-a,
+          .lightning-b,
+          .grid-floor,
+          .hud-scan {
             animation: none !important;
           }
-          .glass-card { transform: none !important; }
+
+          .glass-card {
+            transform: none !important;
+          }
         }
       `}</style>
 
@@ -309,7 +496,9 @@ export default function ContactPage() {
       {[...Array(7)].map((_, i) => (
         <div
           key={i}
-          ref={(el) => (trailRefs.current[i] = el)}
+          ref={(el) => {
+            trailRefs.current[i] = el;
+          }}
           className="pointer-events-none fixed left-0 top-0 z-[60] rounded-full mix-blend-screen"
           style={{
             width: `${16 - i * 1.6}px`,
@@ -326,13 +515,13 @@ export default function ContactPage() {
       ))}
 
       {/* CLICK RIPPLES */}
-      {ripples.map((r) => (
+      {ripples.map((ripple) => (
         <span
-          key={r.id}
+          key={ripple.id}
           className="pointer-events-none fixed z-[55] h-16 w-16 rounded-full border-2 border-[#00eaff]"
           style={{
-            left: r.x,
-            top: r.y,
+            left: ripple.x,
+            top: ripple.y,
             boxShadow: "0 0 20px 2px rgba(0,234,255,0.6)",
             animation: "rippleExpand 0.9s ease-out forwards",
           }}
@@ -341,51 +530,61 @@ export default function ContactPage() {
 
       {/* CYBERPUNK CITYSCAPE BACKGROUND */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        {/* sky gradient */}
+        {/* SKY GRADIENT */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#2a0a4a_0%,_#0c0420_45%,_#05010f_100%)]" />
 
-        {/* lightning flashes */}
+        {/* LIGHTNING */}
         <div className="lightning-a absolute inset-0 bg-[#bfe9ff]" />
         <div className="lightning-b absolute inset-0 bg-[#ff2bd6]" />
 
-        {/* ambient neon glows */}
+        {/* AMBIENT NEON GLOWS */}
         <div className="absolute left-[8%] top-[6%] h-72 w-72 rounded-full bg-[#ff2bd6]/10 blur-3xl" />
+
         <div className="absolute bottom-[30%] right-[6%] h-96 w-96 rounded-full bg-[#00eaff]/10 blur-3xl" />
 
-        {/* thunderbolts */}
-        {bolts.map((b, i) => (
+        {/* THUNDERBOLTS */}
+        {bolts.map((bolt, i) => (
           <div
             key={i}
             className="bolt absolute text-4xl"
-            style={{ top: b.top, left: b.left, animationDelay: b.delay }}
+            style={{
+              top: bolt.top,
+              left: bolt.left,
+              animationDelay: bolt.delay,
+            }}
           >
             ⚡
           </div>
         ))}
 
-        {/* skyline silhouette with blinking windows */}
+        {/* SKYLINE */}
         <div className="absolute inset-x-0 bottom-[22%] h-[45%]">
-          {buildingSpecs.map((b, i) => (
+          {buildingSpecs.map((building, i) => (
             <div
               key={i}
               className="absolute bottom-0 rounded-t-sm bg-[#0c0420]"
               style={{
-                left: b.left,
-                width: `${b.width}px`,
-                height: `${b.height}px`,
+                left: building.left,
+                width: `${building.width}px`,
+                height: `${building.height}px`,
                 boxShadow: "0 0 30px rgba(0,0,0,0.6)",
               }}
             >
-              {b.windows.map((w, j) => (
+              {building.windows.map((windowPosition, j) => (
                 <span
                   key={j}
                   className="flicker absolute h-[3px] w-[3px] rounded-sm"
                   style={{
                     left: "30%",
-                    bottom: `${w}%`,
-                    background: j % 2 === 0 ? "#00eaff" : "#ff2bd6",
-                    boxShadow: `0 0 4px ${j % 2 === 0 ? "#00eaff" : "#ff2bd6"}`,
-                    animationDelay: `${i * 0.4 + j * 0.3}s`,
+                    bottom: `${windowPosition}%`,
+                    background:
+                      j % 2 === 0 ? "#00eaff" : "#ff2bd6",
+                    boxShadow: `0 0 4px ${
+                      j % 2 === 0 ? "#00eaff" : "#ff2bd6"
+                    }`,
+                    animationDelay: `${
+                      i * 0.4 + j * 0.3
+                    }s`,
                   }}
                 />
               ))}
@@ -393,46 +592,50 @@ export default function ContactPage() {
           ))}
         </div>
 
-        {/* street lamps along the horizon */}
+        {/* STREET LAMPS */}
         <div className="absolute inset-x-0 bottom-[21%] h-3">
-          {lampPositions.map((pos, i) => (
+          {lampPositions.map((position, i) => (
             <span
               key={i}
               className="flicker absolute h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-[#ffce54]"
               style={{
-                left: `${pos}%`,
-                boxShadow: "0 0 12px 4px rgba(255,206,84,0.65)",
+                left: `${position}%`,
+                boxShadow:
+                  "0 0 12px 4px rgba(255,206,84,0.65)",
                 animationDelay: `${i * 0.6}s`,
               }}
             />
           ))}
         </div>
 
-        {/* moving cars along two lanes */}
+        {/* MOVING CARS */}
         <div className="absolute inset-x-0 bottom-[16%] h-10">
-          {cars.map((c, i) => (
+          {cars.map((car, i) => (
             <div
               key={i}
               className={`absolute text-2xl ${
-                c.dir === "right" ? "car-right" : "car-left"
+                car.dir === "right"
+                  ? "car-right"
+                  : "car-left"
               }`}
               style={{
-                top: c.lane === 1 ? "0%" : "55%",
-                animationDuration: `${c.duration}s`,
-                animationDelay: `${c.delay}s`,
-                filter: `drop-shadow(0 0 6px ${c.color})`,
+                top: car.lane === 1 ? "0%" : "55%",
+                animationDuration: `${car.duration}s`,
+                animationDelay: `${car.delay}s`,
+                filter: `drop-shadow(0 0 6px ${car.color})`,
               }}
             >
-              {c.emoji}
+              {car.emoji}
             </div>
           ))}
         </div>
 
-        {/* synthwave grid floor (3D perspective) */}
+        {/* SYNTHWAVE GRID */}
         <div
           className="grid-floor absolute inset-x-0 bottom-0 h-[22%]"
           style={{
-            transform: "perspective(220px) rotateX(62deg)",
+            transform:
+              "perspective(220px) rotateX(62deg)",
             transformOrigin: "bottom",
           }}
         />
@@ -453,11 +656,15 @@ export default function ContactPage() {
             <div className="group relative">
               <div className="absolute -inset-2 rounded-full bg-[#00eaff]/20 blur-xl" />
 
-              {/* HUD targeting frame */}
+              {/* HUD TARGETING FRAME */}
               <div className="pointer-events-none absolute -inset-2 rounded-full border border-[#00eaff]/0 transition group-hover:border-[#00eaff]/50" />
+
               <span className="pointer-events-none absolute -left-1 -top-1 h-3 w-3 border-l-2 border-t-2 border-[#00eaff]/0 transition group-hover:border-[#00eaff]" />
+
               <span className="pointer-events-none absolute -right-1 -top-1 h-3 w-3 border-r-2 border-t-2 border-[#00eaff]/0 transition group-hover:border-[#00eaff]" />
+
               <span className="pointer-events-none absolute -bottom-1 -left-1 h-3 w-3 border-b-2 border-l-2 border-[#00eaff]/0 transition group-hover:border-[#00eaff]" />
+
               <span className="pointer-events-none absolute -bottom-1 -right-1 h-3 w-3 border-b-2 border-r-2 border-[#00eaff]/0 transition group-hover:border-[#00eaff]" />
 
               <div className="relative h-32 w-32 overflow-hidden rounded-full border-2 border-[#00eaff]/40 sm:h-36 sm:w-36">
@@ -468,6 +675,7 @@ export default function ContactPage() {
                   height={150}
                   className="h-full w-full object-cover"
                 />
+
                 <span className="hud-scan pointer-events-none absolute inset-x-0 h-[2px] bg-[#00eaff]/80 opacity-0 shadow-[0_0_10px_2px_rgba(0,234,255,0.8)] group-hover:opacity-100" />
               </div>
             </div>
@@ -486,8 +694,8 @@ export default function ContactPage() {
               </p>
 
               <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-400">
-                Passionate about problem solving, web development, photography,
-                chess, and mathematics.
+                Passionate about problem solving, web development,
+                photography, chess, and mathematics.
               </p>
             </div>
           </div>
@@ -513,9 +721,15 @@ export default function ContactPage() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5 transition duration-300 hover:-translate-y-1 hover:border-[#00eaff]/40 hover:bg-[#00eaff]/10 hover:shadow-[0_0_16px_rgba(0,234,255,0.25)]"
                     >
-                      <img src={social.icon} alt="" className="h-5 w-5 invert" />
+                      <img
+                        src={social.icon}
+                        alt=""
+                        className="h-5 w-5 invert"
+                      />
 
-                      <span className="text-sm text-gray-300">{social.name}</span>
+                      <span className="text-sm text-gray-300">
+                        {social.name}
+                      </span>
                     </a>
                   ))}
                 </div>
@@ -556,19 +770,22 @@ export default function ContactPage() {
                   About Me
                 </p>
 
-                <h2 className="text-2xl font-bold">A learner who loves to build.</h2>
+                <h2 className="text-2xl font-bold">
+                  A learner who loves to build.
+                </h2>
 
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-400">
-                  I am currently studying Computer Science and Engineering and
-                  focusing on improving my web development skills. I enjoy
-                  learning by building real projects and solving programming
-                  problems.
+                  I am currently studying Computer Science and
+                  Engineering and focusing on improving my web
+                  development skills. I enjoy learning by building
+                  real projects and solving programming problems.
                 </p>
 
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-400">
-                  My current focus is React and Next.js, while continuously
-                  improving my JavaScript, TypeScript, problem solving, and
-                  software development fundamentals.
+                  My current focus is React and Next.js, while
+                  continuously improving my JavaScript, TypeScript,
+                  problem solving, and software development
+                  fundamentals.
                 </p>
               </section>
 
@@ -578,10 +795,13 @@ export default function ContactPage() {
                   Education
                 </p>
 
-                <h2 className="text-xl font-bold">Bachelor of Science in CSE</h2>
+                <h2 className="text-xl font-bold">
+                  Bachelor of Science in CSE
+                </h2>
 
                 <p className="mt-1 text-sm text-gray-400">
-                  Bangladesh University of Business &amp; Technology (BUBT)
+                  Bangladesh University of Business &amp; Technology
+                  (BUBT)
                 </p>
 
                 <p className="mt-1 text-xs text-gray-500">
@@ -597,7 +817,9 @@ export default function ContactPage() {
                   </p>
 
                   <div className="flex items-end justify-between gap-4">
-                    <h2 className="text-2xl font-bold">Things I&apos;ve built</h2>
+                    <h2 className="text-2xl font-bold">
+                      Things I&apos;ve built
+                    </h2>
 
                     <span className="text-xs text-gray-500">
                       {projects.length} Projects
@@ -610,10 +832,8 @@ export default function ContactPage() {
                     <a
                       key={project.title}
                       href={project.url}
-                      target={project.url !== "#" ? "_blank" : undefined}
-                      rel={
-                        project.url !== "#" ? "noopener noreferrer" : undefined
-                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="group rounded-xl border border-white/10 bg-white/[0.03] p-4 transition duration-300 hover:-translate-y-1 hover:border-[#ff2bd6]/30 hover:bg-white/[0.06] hover:shadow-[0_0_18px_rgba(255,43,214,0.2)]"
                     >
                       <div className="flex items-start justify-between gap-3">
@@ -621,11 +841,9 @@ export default function ContactPage() {
                           {project.title}
                         </h3>
 
-                        {project.url !== "#" && (
-                          <span className="text-xs text-gray-500 transition group-hover:text-[#00eaff]">
-                            ↗
-                          </span>
-                        )}
+                        <span className="text-xs text-gray-500 transition group-hover:text-[#00eaff]">
+                          ↗
+                        </span>
                       </div>
 
                       <p className="mt-2 text-xs leading-5 text-gray-400">
@@ -653,27 +871,41 @@ export default function ContactPage() {
                   Beyond Code
                 </p>
 
-                <h2 className="text-xl font-bold">What I enjoy</h2>
+                <h2 className="text-xl font-bold">
+                  What I enjoy
+                </h2>
 
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-[#00eaff]/30 hover:shadow-[0_0_14px_rgba(0,234,255,0.2)]">
                     <div className="text-2xl">📸</div>
-                    <p className="mt-2 text-xs text-gray-300">Street Photography</p>
+
+                    <p className="mt-2 text-xs text-gray-300">
+                      Street Photography
+                    </p>
                   </div>
 
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-[#00eaff]/30 hover:shadow-[0_0_14px_rgba(0,234,255,0.2)]">
                     <div className="text-2xl">♟️</div>
-                    <p className="mt-2 text-xs text-gray-300">Chess</p>
+
+                    <p className="mt-2 text-xs text-gray-300">
+                      Chess
+                    </p>
                   </div>
 
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-[#00eaff]/30 hover:shadow-[0_0_14px_rgba(0,234,255,0.2)]">
                     <div className="text-2xl">🧮</div>
-                    <p className="mt-2 text-xs text-gray-300">Mathematics</p>
+
+                    <p className="mt-2 text-xs text-gray-300">
+                      Mathematics
+                    </p>
                   </div>
 
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-[#00eaff]/30 hover:shadow-[0_0_14px_rgba(0,234,255,0.2)]">
                     <div className="text-2xl">💻</div>
-                    <p className="mt-2 text-xs text-gray-300">Web Development</p>
+
+                    <p className="mt-2 text-xs text-gray-300">
+                      Web Development
+                    </p>
                   </div>
                 </div>
               </section>
@@ -689,8 +921,9 @@ export default function ContactPage() {
                 </h2>
 
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-400">
-                  Feel free to reach out. I&apos;m always interested in
-                  discussing technology, projects, photography, or new ideas.
+                  Feel free to reach out. I&apos;m always interested
+                  in discussing technology, projects, photography,
+                  or new ideas.
                 </p>
 
                 <a
@@ -711,17 +944,6 @@ export default function ContactPage() {
               </section>
             </div>
           </div>
-
-          {/* FOOTER */}
-          {/* <div className="mt-9 border-t border-white/10 pt-5 text-center">
-            <p className="text-xs text-gray-500">
-              Built with Next.js, React &amp; Tailwind CSS
-            </p>
-
-            <p className="mt-1 text-xs text-gray-600">
-              © {new Date().getFullYear()} Junayed Hasan
-            </p>
-          </div> */}
         </div>
       </section>
     </main>
