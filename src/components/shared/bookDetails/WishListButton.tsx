@@ -1,4 +1,4 @@
-// src/components/shared/bookDetails/ReadButton.tsx
+// src/components/shared/bookDetails/WishListButton.tsx
 
 "use client";
 
@@ -6,22 +6,22 @@ import { BooksContext } from "@/context/BooksContext";
 import { IBook } from "@/types/books.type";
 import React, { useContext } from "react";
 
-interface IReadButtonProps {
+interface IWishListButtonProps {
   book: IBook;
 }
 
-const ReadButton = ({ book }: IReadButtonProps) => {
+const WishListButton = ({ book }: IWishListButtonProps) => {
   const context = useContext(BooksContext);
 
   if (!context) {
     return null;
   }
 
-  const { addToReadBooks } = context;
+  const { addToWishlist } = context;
 
   return (
     <button
-      onClick={() => addToReadBooks(book)}
+      onClick={() => addToWishlist(book)}
       className="
         flex-1
         rounded-xl
@@ -43,9 +43,9 @@ const ReadButton = ({ book }: IReadButtonProps) => {
         hover:shadow-[0_12px_25px_rgba(75,59,37,0.25)]
       "
     >
-      Read Now
+      Wish List
     </button>
   );
 };
 
-export default ReadButton;
+export default WishListButton;

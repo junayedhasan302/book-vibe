@@ -1,5 +1,5 @@
-
 import ReadButton from "@/components/shared/bookDetails/ReadButton";
+import WishListButton from "@/components/shared/bookDetails/WishListButton";
 import { IBook } from "@/types/books.type";
 import Image from "next/image";
 import React from "react";
@@ -139,9 +139,7 @@ const BookDetailsPage = async ({ params }: IBookDetailsPageProps) => {
                     {book.rating}
                   </span>
 
-                  <span className="text-xs text-[#968d80]">
-                    Reader Rating
-                  </span>
+                  <span className="text-xs text-[#968d80]">Reader Rating</span>
                 </div>
               </div>
 
@@ -322,31 +320,8 @@ const BookDetailsPage = async ({ params }: IBookDetailsPageProps) => {
 
               {/* Buttons */}
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-               <ReadButton book={book}/>
-
-                <button
-                  className="
-                    flex-1
-                    rounded-xl
-                    border
-                    border-[#d5c9b8]
-                    bg-transparent
-                    px-5
-                    py-3.5
-                    font-serif
-                    text-sm
-                    font-bold
-                    tracking-wide
-                    text-[#51483b]
-                    transition-all
-                    duration-300
-                    hover:-translate-y-0.5
-                    hover:border-[#bda16d]
-                    hover:bg-[#f5eee2]
-                  "
-                >
-                  ♡ Add to Wishlist
-                </button>
+                <ReadButton book={book} />
+                <WishListButton book={book} />
               </div>
 
               {/* Bottom Quote */}
@@ -362,4 +337,3 @@ const BookDetailsPage = async ({ params }: IBookDetailsPageProps) => {
 };
 
 export default BookDetailsPage;
-

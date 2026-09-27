@@ -1,20 +1,36 @@
-// src/app/listed-books/page.tsx
+// src/app/wishlist/page.tsx
 
 "use client";
 
-import { BooksContext } from "@/context/BooksContext";
+import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useContext } from "react";
+import { BooksContext } from "@/context/BooksContext";
 
-const ListedBooks = () => {
+const Wishlist = () => {
   const context = useContext(BooksContext);
 
   if (!context) {
     return null;
   }
 
-  const { readBooks, removeFromReadBooks } = context;
+  const { wishlist, readBooks, addToReadBooks, removeFromWishlist } = context;
+
+  const handleMarkAsRead = (bookId: number) => {
+    const book = wishlist.find((item) => item.bookId === bookId);
+
+    if (!book) {
+      return;
+    }
+
+    const alreadyRead = readBooks.some((item) => item.bookId === book.bookId);
+
+    if (!alreadyRead) {
+      addToReadBooks(book);
+    }
+
+    removeFromWishlist(book.bookId);
+  };
 
   return (
     <main className="min-h-screen bg-[#f5f1e8] px-4 py-10 sm:px-6">
@@ -25,32 +41,32 @@ const ListedBooks = () => {
           </p>
 
           <h1 className="mt-2 font-serif text-4xl font-bold text-[#29251f]">
-            Listed Books
+            My Wishlist
           </h1>
 
           <p className="mt-2 text-sm text-[#766f63]">
-            Books you have added to your reading list.
+            Books you want to read later.
           </p>
         </div>
 
         <div className="mb-5 flex items-center justify-between">
           <h2 className="font-serif text-2xl font-bold text-[#29251f]">
-            Read Books
+            Wishlist Books
           </h2>
 
           <span className="rounded-full bg-[#f4ead8] px-3 py-1 text-sm font-semibold text-[#806331]">
-            {readBooks.length} Books
+            {wishlist.length} Books
           </span>
         </div>
 
-        {readBooks.length === 0 ? (
+        {wishlist.length === 0 ? (
           <div className="rounded-2xl border border-[#ddd5c8] bg-[#fbfaf6] px-6 py-16 text-center">
             <p className="font-serif text-2xl font-bold text-[#393229]">
-              No books yet
+              Your wishlist is empty
             </p>
 
             <p className="mt-2 text-sm text-[#81786b]">
-              Open a book and click Read Now to add it here.
+              Open a book and add it to your wishlist.
             </p>
 
             <Link
@@ -62,7 +78,7 @@ const ListedBooks = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {readBooks.map((book) => (
+            {wishlist.map((book) => (
               <div
                 key={book.bookId}
                 className="
@@ -105,8 +121,8 @@ const ListedBooks = () => {
                       ★ {book.rating}
                     </span>
 
-                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                      ✓ Read
+                    <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+                      Wishlist
                     </span>
                   </div>
 
@@ -134,7 +150,14 @@ const ListedBooks = () => {
                   </Link>
 
                   <button
-                    onClick={() => removeFromReadBooks(book.bookId)}
+                    onClick={() => handleMarkAsRead(book.bookId)}
+                    className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700 transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-100 hover:shadow-md"
+                  >
+                    Mark as Read
+                  </button>
+
+                  <button
+                    onClick={() => removeFromWishlist(book.bookId)}
                     className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition-all duration-300 hover:bg-red-100"
                   >
                     Remove
@@ -149,4 +172,4 @@ const ListedBooks = () => {
   );
 };
 
-export default ListedBooks;
+export default Wishlist;

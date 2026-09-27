@@ -26,7 +26,7 @@ const Books = async () => {
 
       {/* Books Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {booksData.map((book:IBook) => (
+        {booksData.map((book: IBook) => (
           <BookCard key={book.bookId} book={book} />
         ))}
       </div>

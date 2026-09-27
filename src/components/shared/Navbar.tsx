@@ -2,20 +2,24 @@ import Image from "next/image";
 import React from "react";
 import logo from "@/assets/book.ico";
 import Link from "next/link";
-
 const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 bg-base-100">
+      {" "}
       <div className="navbar container mx-auto mt-4 rounded-2xl bg-base-100 px-4 shadow-md">
-        {/* Navbar Start */}
+        {" "}
+        {/* Navbar Start */}{" "}
         <div className="navbar-start">
-          {/* Mobile Menu */}
+          {" "}
+          {/* Mobile Menu */}{" "}
           <div className="dropdown">
+            {" "}
             <div
               tabIndex={0}
               role="button"
               className="btn btn-ghost btn-circle lg:hidden"
             >
+              {" "}
               <svg
                 aria-label="Menu"
                 xmlns="http://www.w3.org/2000/svg"
@@ -24,147 +28,164 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
+                {" "}
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </div>
-
+                />{" "}
+              </svg>{" "}
+            </div>{" "}
             <ul
               tabIndex={-1}
-              className="
-                menu
-                menu-sm
-                dropdown-content
-                z-10
-                mt-3
-                w-52
-                rounded-2xl
-                border
-                border-base-200
-                bg-base-100
-                p-3
-                shadow-xl
-              "
+              className=" menu menu-sm dropdown-content z-10 mt-3 w-52 rounded-2xl border border-base-200 bg-base-100 p-3 shadow-xl "
             >
+              {" "}
               <li>
+                {" "}
                 <Link href="/" className="rounded-xl">
-                  Home
-                </Link>
-              </li>
-
+                  {" "}
+                  Home{" "}
+                </Link>{" "}
+              </li>{" "}
               <li>
+                {" "}
                 <Link href="/books" className="rounded-xl">
-                  Books
-                </Link>
-              </li>
-
+                  {" "}
+                  Books{" "}
+                </Link>{" "}
+              </li>{" "}
               <li>
+                {" "}
                 <Link href="/listed-books" className="rounded-xl">
-                  Listed Books
-                </Link>
-              </li>
-
+                  {" "}
+                  Listed Books{" "}
+                </Link>{" "}
+              </li>{" "}
               <li>
+                {" "}
+                <Link href="/wishlist" className="rounded-xl">
+                  {" "}
+                  Wishlist{" "}
+                </Link>{" "}
+              </li>{" "}
+              <li>
+                {" "}
                 <Link href="/about" className="rounded-xl">
-                  About
-                </Link>
-              </li>
-
+                  {" "}
+                  About{" "}
+                </Link>{" "}
+              </li>{" "}
               <li>
+                {" "}
                 <Link href="/contact" className="rounded-xl">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Logo */}
+                  {" "}
+                  Contact{" "}
+                </Link>{" "}
+              </li>{" "}
+            </ul>{" "}
+          </div>{" "}
+          {/* Logo */}{" "}
           <Link
             href="/"
             className="ml-2 flex items-center gap-2 transition-opacity hover:opacity-80"
           >
+            {" "}
             <Image
               src={logo}
               alt="Book Vibe Logo"
               width={36}
               height={36}
               className="rounded-lg"
-            />
-
+            />{" "}
             <span className="text-xl font-extrabold tracking-tight">
-              Book<span className="text-success">Vibe</span>
-            </span>
-          </Link>
-        </div>
-
-        {/* Desktop Menu */}
+              {" "}
+              Book<span className="text-success">Vibe</span>{" "}
+            </span>{" "}
+          </Link>{" "}
+        </div>{" "}
+        {/* Desktop Menu */}{" "}
         <div className="navbar-center hidden lg:flex">
+          {" "}
           <ul className="menu menu-horizontal gap-1 px-1 font-medium">
+            {" "}
             <li>
+              {" "}
               <Link
                 href="/"
                 className="rounded-xl transition-colors hover:text-success"
               >
-                Home
-              </Link>
-            </li>
-
+                {" "}
+                Home{" "}
+              </Link>{" "}
+            </li>{" "}
             <li>
+              {" "}
               <Link
                 href="/books"
                 className="rounded-xl transition-colors hover:text-success"
               >
-                Books
-              </Link>
-            </li>
-
+                {" "}
+                Books{" "}
+              </Link>{" "}
+            </li>{" "}
             <li>
+              {" "}
               <Link
                 href="/listed-books"
                 className="rounded-xl transition-colors hover:text-success"
               >
-                Listed Books
-              </Link>
-            </li>
-
+                {" "}
+                Listed Books{" "}
+              </Link>{" "}
+            </li>{" "}
             <li>
+              {" "}
+              <Link
+                href="/wishlist"
+                className="rounded-xl transition-colors hover:text-success"
+              >
+                {" "}
+                Wishlist{" "}
+              </Link>{" "}
+            </li>{" "}
+            <li>
+              {" "}
               <Link
                 href="/about"
                 className="rounded-xl transition-colors hover:text-success"
               >
-                About
-              </Link>
-            </li>
-
+                {" "}
+                About{" "}
+              </Link>{" "}
+            </li>{" "}
             <li>
+              {" "}
               <Link
                 href="/contact"
                 className="rounded-xl transition-colors hover:text-success"
               >
-                Contact
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Actions */}
+                {" "}
+                Contact{" "}
+              </Link>{" "}
+            </li>{" "}
+          </ul>{" "}
+        </div>{" "}
+        {/* Actions */}{" "}
         <div className="navbar-end gap-2">
+          {" "}
           <button className="btn btn-ghost hidden rounded-xl sm:inline-flex">
-            Sign In
-          </button>
-
+            {" "}
+            Sign In{" "}
+          </button>{" "}
           <button className="btn btn-success rounded-xl px-4 sm:px-5">
-            Sign Up
-          </button>
-        </div>
-      </div>
+            {" "}
+            Sign Up{" "}
+          </button>{" "}
+        </div>{" "}
+      </div>{" "}
     </nav>
   );
 };
-
 export default Navbar;
-
