@@ -6,8 +6,8 @@ import {
   useState,
   type MouseEvent,
 } from "react";
-import Image from "next/image";
 
+import Image from "next/image";
 import junayedImage from "@/assets/junayed.jpg";
 
 const socialLinks = [
@@ -196,7 +196,13 @@ type Ripple = {
 
 export default function ContactPage() {
   const cardRef = useRef<HTMLDivElement | null>(null);
+
+  // FIX 1:
+  // Explicitly tell TypeScript what each ref contains.
   const trailRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // FIX 2:
+  // Explicit Ripple[] type prevents never[] inference.
   const [ripples, setRipples] = useState<Ripple[]>([]);
 
   // Cursor light trail
@@ -264,15 +270,8 @@ export default function ContactPage() {
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
 
-    cardRef.current.style.setProperty(
-      "--rx",
-      `${py * -2}deg`
-    );
-
-    cardRef.current.style.setProperty(
-      "--ry",
-      `${px * 2}deg`
-    );
+    cardRef.current.style.setProperty("--rx", `${py * -2}deg`);
+    cardRef.current.style.setProperty("--ry", `${px * 2}deg`);
 
     cardRef.current.style.setProperty(
       "--spot-x",
@@ -348,7 +347,6 @@ export default function ContactPage() {
           from {
             background-position: 0 0, 0 0;
           }
-
           to {
             background-position: 0 64px, 0 0;
           }
@@ -366,7 +364,6 @@ export default function ContactPage() {
           from {
             transform: translateX(-10vw);
           }
-
           to {
             transform: translateX(110vw);
           }
@@ -376,7 +373,6 @@ export default function ContactPage() {
           from {
             transform: translateX(110vw) scaleX(-1);
           }
-
           to {
             transform: translateX(-10vw) scaleX(-1);
           }
@@ -387,7 +383,6 @@ export default function ContactPage() {
             transform: translate(-50%, -50%) scale(0);
             opacity: 0.7;
           }
-
           to {
             transform: translate(-50%, -50%) scale(1);
             opacity: 0;
@@ -398,7 +393,6 @@ export default function ContactPage() {
           0% {
             top: -10%;
           }
-
           100% {
             top: 110%;
           }
@@ -415,7 +409,6 @@ export default function ContactPage() {
               rgba(0, 234, 255, 0.25) 1px,
               transparent 1px
             );
-
           background-size: 64px 64px;
           animation: gridMove 2.4s linear infinite;
         }
@@ -457,7 +450,6 @@ export default function ContactPage() {
             perspective(1400px)
             rotateX(var(--rx, 0deg))
             rotateY(var(--ry, 0deg));
-
           transition: transform 150ms ease-out;
         }
 
@@ -466,7 +458,6 @@ export default function ContactPage() {
           position: absolute;
           inset: 0;
           pointer-events: none;
-
           background: radial-gradient(
             460px circle at var(--spot-x, 50%) var(--spot-y, 0%),
             rgba(0, 234, 255, 0.10),
@@ -539,7 +530,6 @@ export default function ContactPage() {
 
         {/* AMBIENT NEON GLOWS */}
         <div className="absolute left-[8%] top-[6%] h-72 w-72 rounded-full bg-[#ff2bd6]/10 blur-3xl" />
-
         <div className="absolute bottom-[30%] right-[6%] h-96 w-96 rounded-full bg-[#00eaff]/10 blur-3xl" />
 
         {/* THUNDERBOLTS */}
@@ -582,9 +572,7 @@ export default function ContactPage() {
                     boxShadow: `0 0 4px ${
                       j % 2 === 0 ? "#00eaff" : "#ff2bd6"
                     }`,
-                    animationDelay: `${
-                      i * 0.4 + j * 0.3
-                    }s`,
+                    animationDelay: `${i * 0.4 + j * 0.3}s`,
                   }}
                 />
               ))}
@@ -878,7 +866,6 @@ export default function ContactPage() {
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-[#00eaff]/30 hover:shadow-[0_0_14px_rgba(0,234,255,0.2)]">
                     <div className="text-2xl">📸</div>
-
                     <p className="mt-2 text-xs text-gray-300">
                       Street Photography
                     </p>
@@ -886,7 +873,6 @@ export default function ContactPage() {
 
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-[#00eaff]/30 hover:shadow-[0_0_14px_rgba(0,234,255,0.2)]">
                     <div className="text-2xl">♟️</div>
-
                     <p className="mt-2 text-xs text-gray-300">
                       Chess
                     </p>
@@ -894,7 +880,6 @@ export default function ContactPage() {
 
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-[#00eaff]/30 hover:shadow-[0_0_14px_rgba(0,234,255,0.2)]">
                     <div className="text-2xl">🧮</div>
-
                     <p className="mt-2 text-xs text-gray-300">
                       Mathematics
                     </p>
@@ -902,7 +887,6 @@ export default function ContactPage() {
 
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-[#00eaff]/30 hover:shadow-[0_0_14px_rgba(0,234,255,0.2)]">
                     <div className="text-2xl">💻</div>
-
                     <p className="mt-2 text-xs text-gray-300">
                       Web Development
                     </p>
@@ -949,3 +933,4 @@ export default function ContactPage() {
     </main>
   );
 }
+
