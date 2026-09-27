@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Navbar/>
         {children}
         </body>
-        <h1 className="bg-green-600 text-red-900 font-bold text-center">Footer</h1>
+
     </html>
   );
 }

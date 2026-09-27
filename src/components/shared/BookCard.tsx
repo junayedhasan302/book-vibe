@@ -1,5 +1,6 @@
 import { IBook } from "@/types/books.type";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface IBookCardProps {
@@ -34,14 +35,10 @@ const BookCard = ({ book }: IBookCardProps) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-xl font-bold text-slate-900">
-          {book.bookName}
-        </h3>
+        <h3 className="text-xl font-bold text-slate-900">{book.bookName}</h3>
 
         {/* Author */}
-        <p className="mt-1 text-sm text-slate-500">
-          by {book.author}
-        </p>
+        <p className="mt-1 text-sm text-slate-500">by {book.author}</p>
 
         {/* Tags */}
         <div className="mt-3 flex flex-wrap gap-2">
@@ -67,9 +64,11 @@ const BookCard = ({ book }: IBookCardProps) => {
         </div>
 
         {/* Button */}
-        <button className="mt-4 w-full rounded-lg bg-green-600 px-4 py-2.5 font-medium text-white transition hover:bg-green-700">
-          View Details
-        </button>
+        <Link href={`/books/${book.bookId}`}>
+          <button className="mt-4 w-full rounded-lg bg-green-600 px-4 py-2.5 font-medium text-white transition hover:bg-green-700">
+            View Details
+          </button>
+        </Link>
       </div>
     </div>
   );

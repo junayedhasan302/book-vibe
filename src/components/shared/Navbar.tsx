@@ -1,10 +1,11 @@
 import Image from "next/image";
 import React from "react";
 import logo from "@/assets/book.ico";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <nav className="bg-base-100 shadow-md ">
+    <nav className="sticky top-0 z-50 bg-base-100 shadow-md">
       <div className="navbar container mx-auto mt-4 rounded-2xl px-4">
         {/* Navbar Start */}
         <div className="navbar-start">
@@ -37,25 +38,25 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content z-10 mt-3 w-52 rounded-2xl bg-base-100 p-3 shadow-lg"
             >
               <li>
-                <a>Home</a>
+                <Link href="/">Home</Link>
               </li>
 
               <li>
-                <a>Books</a>
+                <Link href="/books">Books</Link>
               </li>
 
               <li>
-                <a>About</a>
+                <Link href="/about">About</Link>
               </li>
 
               <li>
-                <a>Contact</a>
+                <Link href="/contact">Contact</Link>
               </li>
             </ul>
           </div>
 
           {/* Logo */}
-          <div className="ml-2 flex items-center gap-2">
+          <Link href="/" className="ml-2 flex items-center gap-2">
             <Image
               src={logo}
               alt="Book Vibe Logo"
@@ -64,29 +65,37 @@ const Navbar = () => {
               className="rounded-lg"
             />
 
-            <a className="text-xl font-extrabold tracking-tight">
+            <span className="text-xl font-extrabold tracking-tight">
               Book<span className="text-success">Vibe</span>
-            </a>
-          </div>
+            </span>
+          </Link>
         </div>
 
         {/* Desktop Menu */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal gap-2 px-1 font-medium">
             <li>
-              <a className="rounded-xl">Home</a>
+              <Link href="/" className="rounded-xl">
+                Home
+              </Link>
             </li>
 
             <li>
-              <a className="rounded-xl">Books</a>
+              <Link href="/books" className="rounded-xl">
+                Books
+              </Link>
             </li>
 
             <li>
-              <a className="rounded-xl">About</a>
+              <Link href="/about" className="rounded-xl">
+                About
+              </Link>
             </li>
 
             <li>
-              <a className="rounded-xl">Contact</a>
+              <Link href="/contact" className="rounded-xl">
+                Contact
+              </Link>
             </li>
           </ul>
         </div>
@@ -95,7 +104,9 @@ const Navbar = () => {
         <div className="navbar-end gap-2">
           <button className="btn btn-ghost rounded-xl">Sign In</button>
 
-          <button className="btn btn-success rounded-xl px-5">Sign Up</button>
+          <button className="btn btn-success rounded-xl px-5">
+            Sign Up
+          </button>
         </div>
       </div>
     </nav>
