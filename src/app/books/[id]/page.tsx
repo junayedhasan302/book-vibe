@@ -1,3 +1,5 @@
+import { promises as fs } from "fs";
+import path from "path";
 import ReadButton from "@/components/shared/bookDetails/ReadButton";
 import WishListButton from "@/components/shared/bookDetails/WishListButton";
 import { IBook } from "@/types/books.type";
@@ -8,15 +10,10 @@ interface IBookDetailsPageProps {
   params: Promise<{ id: string }>;
 }
 
-const getBooks = async () => {
-  const res = await fetch("http://localhost:3000/booksData.json");
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch books");
-  }
-
-  const data = await res.json();
-  return data;
+const getBooks = async (): Promise<IBook[]> => {
+  const filePath = path.join(process.cwd(), "public", "booksData.json");
+  const fileContents = await fs.readFile(filePath, "utf-8");
+  return JSON.parse(fileContents);
 };
 
 const BookDetailsPage = async ({ params }: IBookDetailsPageProps) => {
@@ -27,7 +24,6 @@ const BookDetailsPage = async ({ params }: IBookDetailsPageProps) => {
   const book = booksData.find(
     (book: IBook) => String(book.bookId) === String(id),
   );
-
   if (!book) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f5f1e8] px-4">
