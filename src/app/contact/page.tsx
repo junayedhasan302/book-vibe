@@ -200,7 +200,7 @@ export default function ContactPage() {
   // FIX 1:
   // Explicitly tell TypeScript what each ref contains.
   const trailRefs = useRef<(HTMLDivElement | null)[]>([]);
-
+  
   // FIX 2:
   // Explicit Ripple[] type prevents never[] inference.
   const [ripples, setRipples] = useState<Ripple[]>([]);
